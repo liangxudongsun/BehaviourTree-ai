@@ -1237,7 +1237,7 @@ export class BehaviorTreeBuilder<T> {
 
             // 事件驱动节点
             case 'event-action':
-                const eventActionName = props.eventName;
+                const eventActionName = BehaviorTreeBuilder.extractNestedValue(props.eventName);
                 if (eventActionName && typeof eventActionName === 'string') {
                     node = new ExecuteAction<T>((ctx: T) => {
                         try {
@@ -1260,15 +1260,16 @@ export class BehaviorTreeBuilder<T> {
 
                             // 解析参数
                             let parameters = {};
-                            if (props.parameters) {
-                                if (typeof props.parameters === 'string') {
+                            const parametersValue = BehaviorTreeBuilder.extractNestedValue(props.parameters);
+                            if (parametersValue) {
+                                if (typeof parametersValue === 'string') {
                                     try {
-                                        parameters = JSON.parse(props.parameters);
+                                        parameters = JSON.parse(parametersValue);
                                     } catch (e) {
-                                        console.warn(`[event-action] 参数解析失败: ${props.parameters}`);
+                                        console.warn(`[event-action] 参数解析失败: ${parametersValue}`);
                                     }
                                 } else {
-                                    parameters = props.parameters;
+                                    parameters = parametersValue;
                                 }
 
                                 // 支持黑板变量替换
@@ -1321,7 +1322,7 @@ export class BehaviorTreeBuilder<T> {
                 break;
 
             case 'event-condition':
-                const eventConditionName = props.eventName;
+                const eventConditionName = BehaviorTreeBuilder.extractNestedValue(props.eventName);
                 if (eventConditionName && typeof eventConditionName === 'string') {
                     node = new ExecuteActionConditional<T>((ctx: T) => {
                         try {
@@ -1344,15 +1345,16 @@ export class BehaviorTreeBuilder<T> {
 
                             // 解析参数
                             let parameters = {};
-                            if (props.parameters) {
-                                if (typeof props.parameters === 'string') {
+                            const condParametersValue = BehaviorTreeBuilder.extractNestedValue(props.parameters);
+                            if (condParametersValue) {
+                                if (typeof condParametersValue === 'string') {
                                     try {
-                                        parameters = JSON.parse(props.parameters);
+                                        parameters = JSON.parse(condParametersValue);
                                     } catch (e) {
-                                        console.warn(`[event-condition] 参数解析失败: ${props.parameters}`);
+                                        console.warn(`[event-condition] 参数解析失败: ${condParametersValue}`);
                                     }
                                 } else {
-                                    parameters = props.parameters;
+                                    parameters = condParametersValue;
                                 }
 
                                 // 支持黑板变量替换
